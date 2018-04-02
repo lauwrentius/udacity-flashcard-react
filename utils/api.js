@@ -6,12 +6,14 @@ import { AsyncStorage } from 'react-native'
 export default class API{
   static initDeck() {
     return AsyncStorage.setItem(DECK_STORAGE_KEY, JSON.stringify(INIT_DECK_DATA))
-      .then(res=>res.json())
+      .then(res=>{
+        console.log("INIT",res)
+        return JSON.parse(res)
+      })
   }
 
   static getDecks() {
     //============if decks is empty init Deck
-
     return AsyncStorage.getItem(DECK_STORAGE_KEY)
       .then(res=>JSON.parse(res))
   }
