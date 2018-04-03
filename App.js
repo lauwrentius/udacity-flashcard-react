@@ -1,33 +1,42 @@
 import React from 'react'
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, View, TouchableOpacity, Platform, Modal } from 'react-native'
 
 import { createStore, applyMiddleware, compose } from 'redux'
 import { Provider } from 'react-redux'
 import thunkMiddleware from 'redux-thunk'
 import { Constants } from 'expo'
 import { StackNavigator } from 'react-navigation'
+import Icon from 'react-native-vector-icons/Ionicons';
 
 
 import reducer from 'reducers'
 import DeckLists from 'components/DeckLists'
+import DeckEdit from 'components/DeckEdit'
 import DeckDetails from 'components/DeckDetails'
 import HeaderBar from 'components/HeaderBar'
+
+// const {params} = navigation.state;
+const navOptions = ({ navigation }) => ({
+  headerStyle: {
+    backgroundColor: '#0288D1',
+  },
+  headerTintColor: '#fff',
+  headerTitleStyle: {
+    fontWeight: 'bold',
+  },
+})
 
 const MainNavigator = StackNavigator({
   Home: {
     screen: DeckLists,
-    navigationOptions: {
-      title: 'HeaderBar',
-      headerStyle: {
-        backgroundColor: '#0288D1',
-      },
-      headerTintColor: '#fff',
-      headerTitleStyle: {
-        fontWeight: 'bold',
-      },
-    }
+    navigationOptions: navOptions
   },
-  Details: { screen: DeckDetails }
+  Details: {
+    screen: DeckDetails
+  },
+  DeckEdit: {
+    screen: DeckEdit
+  }
   // DeckDetail: {
   //   screen: EntryDetail,
   //   navigationOptions: {
@@ -58,12 +67,13 @@ const store = createStore(
 )
 
 export default class App extends React.Component {
-
   render() {
+    const {navigation} = this.props
+    console.log(this.props)
     return (
       <Provider store={store}>
         <View style={{flex: 1}}>
-          <MainNavigator />
+          <MainNavigator style={{flex: 1}} />
         </View>
       </Provider>
     )

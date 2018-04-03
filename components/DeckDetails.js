@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 
 import { StyleSheet,  View, TouchableOpacity, FlatList, StatusBar } from 'react-native';
 import { ButtonGroup, Button, Text, ListItem, Header } from 'react-native-elements'
-import Icon from 'react-native-vector-icons/FontAwesome';
+import Icon from 'react-native-vector-icons/Ionicons';
 
 
 import { initDecks } from 'actions'
@@ -17,6 +17,7 @@ class DeckDetails extends Component {
   }
   btnGroupsPress = (index) =>{
     console.log(index)
+    this.props.navigation.navigate('DeckEdit',{method:'edit'})
   }
 
   render () {
@@ -25,8 +26,11 @@ class DeckDetails extends Component {
 
     const deck = decks[navigation.state.params.title]
 
+
     return (
-      <View style={{flex:1, backgroundColor: '#cc0000'}}>
+      <View style={{flex:1,
+          height:500,
+          backgroundColor: '#cc0000'}}>
         <Text h3>{deck.title}</Text>
         <Text h5>{`${deck.questions.length} questions`}</Text>
         <ButtonGroup
@@ -34,16 +38,21 @@ class DeckDetails extends Component {
           onPress={this.btnGroupsPress}
         />
         <Button
+          style={{marginBottom: 8}}
           title='Start Quiz'
         />
         <FlatList
           style={{backgroundColor: '#eeeeee', flex: 1}}
-          data={deck}
+          data={deck.questions}
           keyExtractor={(item,idx)=>idx}
           renderItem={({item})=>
             <ListItem
               title={item.question}
               subtitle={item.answer}
+              rightIcon={{
+                color: '#86939e',
+                fontSize: 12,
+                name: 'edit' }}
             />
           }
         />
