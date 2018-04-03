@@ -1,32 +1,52 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 
-import { StyleSheet, Text, View, TouchableOpacity, FlatList, StatusBar } from 'react-native';
-import { ListItem, Header } from 'react-native-elements'
+import { StyleSheet,  View, TouchableOpacity, FlatList, StatusBar } from 'react-native';
+import { ButtonGroup, Button, Text, ListItem, Header } from 'react-native-elements'
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 
 import { initDecks } from 'actions'
 // import HeaderBar from components/HeaderBar
 
 
-class DeckLists extends Component {
+class DeckDetails extends Component {
   constructor(props){
     super(props)
-
-    this.props.initDecks()
+    console.log(this.props.navigation.state.params)
   }
-  loadDeck = () => {
-    // console.log(this.props)
-    // this.props.initDecks()
-    this.props.getDecks().then(res=>{
-      console.log(res)
-    })
+  btnGroupsPress = (index) =>{
+    console.log(index)
   }
 
   render () {
+    const { navigation, decks } = this.props
+    const buttons = ['Edit Deck', 'Add Questions']
+
+    const deck = decks[navigation.state.params.title]
+
     return (
-      <View>
-        <Text>DECK Details</Text>
+      <View style={{flex:1, backgroundColor: '#cc0000'}}>
+        <Text h3>{deck.title}</Text>
+        <Text h5>{`${deck.questions.length} questions`}</Text>
+        <ButtonGroup
+          buttons={buttons}
+          onPress={this.btnGroupsPress}
+        />
+        <Button
+          title='Start Quiz'
+        />
+        <FlatList
+          style={{backgroundColor: '#eeeeee', flex: 1}}
+          data={deck}
+          keyExtractor={(item,idx)=>idx}
+          renderItem={({item})=>
+            <ListItem
+              title={item.question}
+              subtitle={item.answer}
+            />
+          }
+        />
       </View>
     )
   }
@@ -34,7 +54,7 @@ class DeckLists extends Component {
 
 function mapStateToProps ({ cards, decks }) {
   return {
-    decks: Object.values(decks)
+    decks: decks
   }
 }
 function mapDispatchToProps (dispatch) {
@@ -46,4 +66,4 @@ function mapDispatchToProps (dispatch) {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(FlashCard)
+)(DeckDetails)

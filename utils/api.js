@@ -7,15 +7,22 @@ export default class API{
   static initDeck() {
     return AsyncStorage.setItem(DECK_STORAGE_KEY, JSON.stringify(INIT_DECK_DATA))
       .then(res=>{
-        console.log("INIT",res)
-        return JSON.parse(res)
+        //do something?
       })
   }
 
   static getDecks() {
     //============if decks is empty init Deck
     return AsyncStorage.getItem(DECK_STORAGE_KEY)
-      .then(res=>JSON.parse(res))
+      .then(res=>{
+        const ret = JSON.parse(res)
+        console.log(ret)
+        if(ret !== null)
+          return ret
+
+        API.initDeck()
+        return INIT_DECK_DATA
+      })
   }
 }
 

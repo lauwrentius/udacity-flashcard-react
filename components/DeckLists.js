@@ -23,15 +23,16 @@ class DeckLists extends Component {
     // getDecks().then(res=>{
     //   console.log(res)
     // })\
+
     console.log(this.props)
   }
   listItems
 
   render () {
     return (
-      <View>
+      <View style={{flex: 1}}>
         <FlatList
-          style={{backgroundColor: '#cc00cc', flexGrow: 1}}
+          style={{backgroundColor: '#eeeeee', flex: 1}}
           data={this.props.decks}
           keyExtractor={(item,idx)=>
             item.title
@@ -40,7 +41,7 @@ class DeckLists extends Component {
             <ListItem
               title={item.title}
               subtitle={`${item.questions.length} questions`}
-              onPress={ this.loadDeck }
+              onPress={ ()=> this.props.navigation.navigate("Details",{title: item.title}) }
             />
           }
         />

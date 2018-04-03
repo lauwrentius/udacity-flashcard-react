@@ -10,6 +10,7 @@ import { StackNavigator } from 'react-navigation'
 
 import reducer from 'reducers'
 import DeckLists from 'components/DeckLists'
+import DeckDetails from 'components/DeckDetails'
 import HeaderBar from 'components/HeaderBar'
 
 const MainNavigator = StackNavigator({
@@ -26,7 +27,7 @@ const MainNavigator = StackNavigator({
       },
     }
   },
-  Test: { screen: HeaderBar }
+  Details: { screen: DeckDetails }
   // DeckDetail: {
   //   screen: EntryDetail,
   //   navigationOptions: {
@@ -61,7 +62,7 @@ export default class App extends React.Component {
   render() {
     return (
       <Provider store={store}>
-        <View style={{ flexGrow: 1 }}>
+        <View style={{flex: 1}}>
           <MainNavigator />
         </View>
       </Provider>
