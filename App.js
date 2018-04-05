@@ -13,7 +13,8 @@ import reducer from 'reducers'
 import DeckLists from 'components/DeckLists'
 import DeckEdit from 'components/DeckEdit'
 import DeckDetails from 'components/DeckDetails'
-import HeaderBar from 'components/HeaderBar'
+// import HeaderBar from 'components/HeaderBar'
+import API from 'utils/api'
 
 // const {params} = navigation.state;
 const navOptions = ({ navigation }) => ({
@@ -32,10 +33,14 @@ const MainNavigator = StackNavigator({
     navigationOptions: navOptions
   },
   Details: {
-    screen: DeckDetails
+    screen: DeckDetails,
+    navigationOptions: navOptions
+
   },
   DeckEdit: {
-    screen: DeckEdit
+    screen: DeckEdit,
+    navigationOptions: navOptions
+
   }
   // DeckDetail: {
   //   screen: EntryDetail,
@@ -67,6 +72,12 @@ const store = createStore(
 )
 
 export default class App extends React.Component {
+  constructor(props){
+    super(props)
+    // API.addDeck("TEST2")
+    // API.clearData()
+  }
+
   render() {
     const {navigation} = this.props
     console.log(this.props)

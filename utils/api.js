@@ -1,28 +1,57 @@
 import { AsyncStorage } from 'react-native'
-
+import uuidv1 from 'uuid/v1'
 // import { formatCalendarResults, CALENDAR_STORAGE_KEY } from './_calendar'
 
 
 export default class API{
   static initDeck() {
-    return AsyncStorage.setItem(DECK_STORAGE_KEY, JSON.stringify(INIT_DECK_DATA))
-      .then(res=>{
-        //do something?
-      })
+    const initItem = INIT_DECK_DATA
+      .map(item=>({...item, id:uuidv1()}))
+      .reduce((obj,item)=>{
+        obj[item.id] = item
+        return obj
+      }, {})
+
+    AsyncStorage.setItem( DECK_STORAGE_KEY,
+      JSON.stringify(initItem))
+
+    return initItem
   }
 
   static getDecks() {
-    //============if decks is empty init Deck
     return AsyncStorage.getItem(DECK_STORAGE_KEY)
       .then(res=>{
         const ret = JSON.parse(res)
-        console.log(ret)
         if(ret !== null)
           return ret
-
-        API.initDeck()
-        return INIT_DECK_DATA
+        return API.initDeck()
       })
+  }
+
+  static addDeck(title){
+    const id = uuidv1()
+    const deck = {id, title, questions:[]}
+    return AsyncStorage.mergeItem( DECK_STORAGE_KEY,
+      JSON.stringify({[id]:deck}))
+        .then(res=>deck)
+  }
+  static editDeck(deck){
+
+  }
+
+  static deleteDeck(id){
+    return AsyncStorage.getItem(DECK_STORAGE_KEY)
+      .then(res=>{
+        const data = JSON.parse(res)
+        const deck = data[id]
+        delete data[id]
+        return AsyncStorage.setItem(DECK_STORAGE_KEY, JSON.stringify(data))
+          .then(res=>deck)
+      })
+  }
+
+  static clearData(){
+    AsyncStorage.clear()
   }
 }
 
@@ -45,8 +74,8 @@ export default class API{
 // }
 
 const DECK_STORAGE_KEY = 'UdacityFlashcard'
-const INIT_DECK_DATA = {
-  React: {
+const INIT_DECK_DATA = [
+  {
     title: 'React',
     questions: [
       {
@@ -59,7 +88,7 @@ const INIT_DECK_DATA = {
       }
     ]
   },
-  JavaScript: {
+  {
     title: 'JavaScript',
     questions: [
       {
@@ -68,4 +97,4 @@ const INIT_DECK_DATA = {
       }
     ]
   }
-}
+]

@@ -1,46 +1,91 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 
-import { StyleSheet,  View, TouchableOpacity, FlatList, StatusBar } from 'react-native';
+import { StyleSheet,  View, TouchableOpacity, FlatList, StatusBar, Alert} from 'react-native'
 import { ButtonGroup, Button, Text, ListItem, Header } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/Ionicons';
 
 
-import { initDecks } from 'actions'
+import { initDecks, deleteDeck } from 'actions'
 // import HeaderBar from components/HeaderBar
+
+const styles = StyleSheet.create({
+  btnGroup:{
+    paddingRight: 10,
+    paddingLeft: 10,
+    paddingTop: 0,
+    paddingBottom: 0,
+    flexDirection: "row"
+  },
+  smBtn:{
+    backgroundColor: "#333333",
+    padding: 10,
+    margin: 5,
+    flex: 1,
+  },
+  smBtnTxt:{
+    textAlign: "center",
+    color: "white"
+  }
+
+})
 
 
 class DeckDetails extends Component {
   constructor(props){
     super(props)
-    console.log(this.props.navigation.state.params)
   }
   btnGroupsPress = (index) =>{
-    console.log(index)
     this.props.navigation.navigate('DeckEdit',{method:'edit'})
   }
-
+  onDelete = () => {
+    const { navigation, deleteDeck } = this.props
+    console.log("D", navigation.state.params.id)
+    return deleteDeck(navigation.state.params.id)
+      .then(res=>navigation.replace("Home"))
+  }
+  promptDelete = () => {
+    Alert.alert("Delete Deck", "Do you want to delete this deck?", [
+      {text: 'Cancel', onPress: () => {}},
+      {text: 'OK', onPress: () =>this.onDelete()},
+    ],
+    { cancelable: false })
+  }
   render () {
     const { navigation, decks } = this.props
     const buttons = ['Edit Deck', 'Add Questions']
+    const deck = decks[navigation.state.params.id]
 
-    const deck = decks[navigation.state.params.title]
-
+    if(!deck)
+      return <View></View>
 
     return (
       <View style={{flex:1,
-          height:500,
-          backgroundColor: '#cc0000'}}>
+          height:500,}}>
         <Text h3>{deck.title}</Text>
         <Text h5>{`${deck.questions.length} questions`}</Text>
-        <ButtonGroup
-          buttons={buttons}
-          onPress={this.btnGroupsPress}
-        />
-        <Button
-          style={{marginBottom: 8}}
-          title='Start Quiz'
-        />
+        <View style={styles.btnGroup}>
+          <TouchableOpacity
+            onPress={this.promptDelete}
+            style={styles.smBtn}>
+            <Text style={styles.smBtnTxt}>Delete Deck</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.smBtn}>
+            <Text style={styles.smBtnTxt}>Edit Deck</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.btnGroup}>
+          <TouchableOpacity
+            style={styles.smBtn}>
+            <Text style={styles.smBtnTxt}>Add Question</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.smBtn}>
+            <Text style={styles.smBtnTxt}>Start Quiz</Text>
+          </TouchableOpacity>
+        </View>
+
         <FlatList
           style={{backgroundColor: '#eeeeee', flex: 1}}
           data={deck.questions}
@@ -68,7 +113,8 @@ function mapStateToProps ({ cards, decks }) {
 }
 function mapDispatchToProps (dispatch) {
   return {
-    initDecks: () => dispatch(initDecks())
+    initDecks: () => dispatch(initDecks()),
+    deleteDeck: (data) => dispatch(deleteDeck(data))
   }
 }
 
