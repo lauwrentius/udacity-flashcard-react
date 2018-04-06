@@ -36,9 +36,18 @@ export default class API{
         .then(res=>deck)
   }
   static editDeck(deck){
-
+    return AsyncStorage.mergeItem( DECK_STORAGE_KEY,
+      JSON.stringify({[deck.id]:deck}))
+        .then(res=>deck)
   }
-
+  static addQuestion(deck,question){
+    // console.log("Add Q", deck,question)
+    const arr = deck.questions.concat(question)
+    const obj = Object.assign(deck,{questions: arr})
+    return AsyncStorage.mergeItem( DECK_STORAGE_KEY,
+      JSON.stringify({[obj.id]:obj}))
+        .then(res=>obj)
+  }
   static deleteDeck(id){
     return AsyncStorage.getItem(DECK_STORAGE_KEY)
       .then(res=>{

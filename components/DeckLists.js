@@ -20,7 +20,7 @@ class DeckLists extends Component {
    headerRight: (<Icon
      style={{fontSize:26, padding: 10, color: '#ffffff'}}
      name={addIcon}
-     onPress={()=>navigation.navigate('DeckEdit',{method:'add'})}
+     onPress={()=>navigation.navigate('DeckForm',{id:null})}
    />)
   })
 

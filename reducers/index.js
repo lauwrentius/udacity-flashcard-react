@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux'
-import {INIT_DECK,ADD_DECK,DELETE_DECK} from 'actions'
+import {INIT_DECK,ADD_DECK,EDIT_DECK,DELETE_DECK} from 'actions'
 
 function decks (state = {}, action) {
   const { deck } = action
@@ -7,6 +7,7 @@ function decks (state = {}, action) {
   switch (action.type){
     case INIT_DECK:
       return deck
+    case EDIT_DECK:
     case ADD_DECK:
       return {...state,[deck.id]: deck}
     case DELETE_DECK:

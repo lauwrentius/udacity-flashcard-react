@@ -30,26 +30,23 @@ const styles = StyleSheet.create({
 
 })
 
-
 class DeckDetails extends Component {
   constructor(props){
     super(props)
   }
   btnGroupsPress = (index) =>{
-    this.props.navigation.navigate('DeckEdit',{method:'edit'})
+    this.props.navigation.navigate('DeckForm',{method:'edit'})
   }
   onDelete = () => {
     const { navigation, deleteDeck } = this.props
-    console.log("D", navigation.state.params.id)
-    return deleteDeck(navigation.state.params.id)
-      .then(res=>navigation.replace("Home"))
+    navigation.replace("Home")
+    deleteDeck(navigation.state.params.id)
   }
   promptDelete = () => {
     Alert.alert("Delete Deck", "Do you want to delete this deck?", [
       {text: 'Cancel', onPress: () => {}},
-      {text: 'OK', onPress: () =>this.onDelete()},
-    ],
-    { cancelable: false })
+      {text: 'OK', onPress: () => this.onDelete()},
+    ])
   }
   render () {
     const { navigation, decks } = this.props
@@ -71,12 +68,16 @@ class DeckDetails extends Component {
             <Text style={styles.smBtnTxt}>Delete Deck</Text>
           </TouchableOpacity>
           <TouchableOpacity
+            onPress={()=>{
+              navigation.navigate("DeckForm",{id: deck.id})}}
             style={styles.smBtn}>
             <Text style={styles.smBtnTxt}>Edit Deck</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.btnGroup}>
           <TouchableOpacity
+            onPress={()=>{
+              navigation.navigate("QuestionForm",{deck: deck})}}
             style={styles.smBtn}>
             <Text style={styles.smBtnTxt}>Add Question</Text>
           </TouchableOpacity>
@@ -87,7 +88,7 @@ class DeckDetails extends Component {
         </View>
 
         <FlatList
-          style={{backgroundColor: '#eeeeee', flex: 1}}
+          style={{backgroundColor: '#cccccc', flex: 1}}
           data={deck.questions}
           keyExtractor={(item,idx)=>idx}
           renderItem={({item})=>

@@ -1,5 +1,5 @@
 import API from 'utils/api'
-import {ADD_DECK,INIT_DECK,DELETE_DECK} from './actionTypes'
+import {ADD_DECK,INIT_DECK,EDIT_DECK,DELETE_DECK} from './actionTypes'
 
 export function getDecks(){
   return (dispatch) => {
@@ -22,7 +22,23 @@ export function deleteDeck(id){
     })
   }
 }
+export function editDeck(deck){
+  return (dispatch) => {
+    return API.editDeck(deck).then(res=>{
+      console.log("EDIT API",res)
+      return dispatch(asyncCallback(EDIT_DECK, res))
+    })
+  }
+}
 
+export function addQuestion(deck, question){
+  return (dispatch) => {
+    return API.addQuestion(deck, question).then(res=>{
+      console.log("RES ADD",res)
+      return dispatch(asyncCallback(EDIT_DECK, res))
+    })
+  }
+}
 function asyncCallback(type, deck){
   return {type, deck}
 }

@@ -12,7 +12,7 @@ import Icon from 'react-native-vector-icons/Ionicons'
 
 
 
-import { addDeck, initDecks } from 'actions'
+import { editDeck, addDeck, initDecks } from 'actions'
 
 
 // const ok = (Platform.OS === 'ios') ? 'ios-checkmark' : 'md-checkmark'
@@ -52,31 +52,37 @@ const styles = StyleSheet.create({
   }
 })
 
-class DeckEdit extends Component {
+class DeckForm extends Component {
   static navigationOptions = ({ navigation }) => ({
-   title: (navigation.state.params.method === 'add') ? "Add Deck" : "Edit Deck",
+   title: (navigation.state.params.id === null) ? "Add Deck" : "Edit Deck",
   })
-
+  state = {
+    text: ''
+  }
 
 
   constructor(props){
     super(props)
-    const {navigation} = this.props
     // const title =
 
-
+    // console.log("M",navigation.state.params.method)
     // navigation.setParams({ title })
 
     // setParams
-    console.log(navigation.state.params)
+    // console.log(navigation.state.params)
+
+    //   decks
   }
-  state = {
-    text: ''
+  componentDidMount(){
+    const {decks, navigation} = this.props
+
+    if(navigation.state.params.id !== null)
+      this.setState({text:decks[navigation.state.params.id]['title']})
   }
-  okBtnPress = () =>{
+
+  onAddDeck = () =>{
     const { addDeck, navigation } = this.props
     addDeck(this.state.text).then(res=>{
-      console.log("ADD Deck res", res, navigation)
       navigation.replace("Details",{id: res.deck.id})
       // this.props.navigation.dispatch(
       //   NavigationActions.replace({
@@ -86,7 +92,19 @@ class DeckEdit extends Component {
     })
     // console.log(this.state)
   }
+  onEditDeck = () =>{
+    const { decks, editDeck, navigation } = this.props
+    editDeck(Object.assign(
+      decks[navigation.state.params.id],
+      {title:this.state.text})).then(res=>
+        navigation.goBack())
+  }
+
   render () {
+    const {navigation} = this.props
+    const btnConfirm = (navigation.state.params.id === null) ?
+      this.onAddDeck : this.onEditDeck
+
     return (
       <View>
         <TextInput
@@ -101,7 +119,7 @@ class DeckEdit extends Component {
             buttonStyle={{}}
             borderRadius={5}
             backgroundColor='#F44336'
-            onPress={()=>{this.props.navigation.goBack()}}
+            onPress={()=>{navigation.goBack()}}
             title='Cancel' />
           <Button
             containerViewStyle={{flex:1, marginLeft: 0, marginRight: 0}}
@@ -109,7 +127,7 @@ class DeckEdit extends Component {
             borderRadius={5}
             backgroundColor='#4CAF50'
             disabled={this.state.text === ''}
-            onPress={this.okBtnPress}
+            onPress={btnConfirm}
             title='Ok' />
         </View>
 
@@ -126,11 +144,12 @@ function mapStateToProps ({ cards, decks }) {
 function mapDispatchToProps (dispatch) {
   return {
     initDecks: () => dispatch(initDecks()),
-    addDeck: (data) => dispatch(addDeck(data))
+    addDeck: (data) => dispatch(addDeck(data)),
+    editDeck: (data) => dispatch(editDeck(data)),
   }
 }
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(DeckEdit)
+)(DeckForm)

@@ -11,8 +11,9 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 import reducer from 'reducers'
 import DeckLists from 'components/DeckLists'
-import DeckEdit from 'components/DeckEdit'
 import DeckDetails from 'components/DeckDetails'
+import DeckForm from 'components/DeckForm'
+import QuestionForm from 'components/QuestionForm'
 // import HeaderBar from 'components/HeaderBar'
 import API from 'utils/api'
 
@@ -37,10 +38,13 @@ const MainNavigator = StackNavigator({
     navigationOptions: navOptions
 
   },
-  DeckEdit: {
-    screen: DeckEdit,
+  DeckForm: {
+    screen: DeckForm,
     navigationOptions: navOptions
-
+  },
+  QuestionForm: {
+    screen: QuestionForm,
+    navigationOptions: navOptions
   }
   // DeckDetail: {
   //   screen: EntryDetail,
