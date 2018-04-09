@@ -6,26 +6,29 @@ import uuidv1 from 'uuid/v1'
 export default class API{
   static initDeck() {
     const initItem = INIT_DECK_DATA
-      .map(item=>({...item, id:uuidv1()}))
-      .reduce((obj,item)=>{
-        obj[item.id] = item
-        return obj
-      }, {})
-
-    AsyncStorage.setItem( DECK_STORAGE_KEY,
-      JSON.stringify(initItem))
+      .map(item=>{
+        const id = uuidv1()
+        return [id, JSON.stringify({...item, id})]
+      })
+    console.log(initItem)
+    AsyncStorage.multiSet(initItem))
 
     return initItem
   }
 
   static getDecks() {
-    return AsyncStorage.getItem(DECK_STORAGE_KEY)
-      .then(res=>{
-        const ret = JSON.parse(res)
-        if(ret !== null)
-          return ret
-        return API.initDeck()
-      })
+    return AsyncStorage.getAllKeys().then(res=>{
+      console.log("R",JSON.parse(res)
+      return null
+    })
+
+    // return AsyncStorage.getItem(DECK_STORAGE_KEY)
+    //   .then(res=>{
+    //     const ret = JSON.parse(res)
+    //     if(ret !== null)
+    //       return ret
+    //     return API.initDeck()
+    //   })
   }
 
   static addDeck(title){
@@ -48,16 +51,19 @@ export default class API{
       JSON.stringify({[obj.id]:obj}))
         .then(res=>obj)
   }
-  static deleteDeck(id){
+  static deleteDeck(deck){
     return AsyncStorage.getItem(DECK_STORAGE_KEY)
       .then(res=>{
         const data = JSON.parse(res)
-        const deck = data[id]
-        delete data[id]
+        delete data[deck.id]
         return AsyncStorage.setItem(DECK_STORAGE_KEY, JSON.stringify(data))
           .then(res=>deck)
       })
   }
+
+  // static editQuestion(deck,question,index){
+  //   return
+  // }
 
   static clearData(){
     AsyncStorage.clear()

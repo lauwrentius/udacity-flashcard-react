@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 
 import { connect } from 'react-redux'
 
-import { StyleSheet,  View, TouchableOpacity, FlatList, StatusBar, TextInput, Platform } from 'react-native'
+import { StyleSheet,  View, TouchableOpacity, FlatList, StatusBar, TextInput, Platform,Alert } from 'react-native'
 
 import { ButtonGroup, Button, Text, ListItem, Header } from 'react-native-elements'
 
@@ -12,7 +12,7 @@ import Icon from 'react-native-vector-icons/Ionicons'
 
 
 
-import { editDeck, addDeck, initDecks } from 'actions'
+import { editDeck, addDeck, initDecks, deleteDeck } from 'actions'
 
 
 // const ok = (Platform.OS === 'ios') ? 'ios-checkmark' : 'md-checkmark'
@@ -74,36 +74,46 @@ class DeckForm extends Component {
     //   decks
   }
   componentDidMount(){
-    const {decks, navigation} = this.props
+    const {deck} = this.props.navigation.state.params
 
-    if(navigation.state.params.id !== null)
-      this.setState({text:decks[navigation.state.params.id]['title']})
+    if(deck !== null)
+      this.setState({text:deck.title})
   }
 
   onAddDeck = () =>{
     const { addDeck, navigation } = this.props
+    const {deck} = navigation.state.params
+
     addDeck(this.state.text).then(res=>{
       navigation.replace("Details",{id: res.deck.id})
-      // this.props.navigation.dispatch(
-      //   NavigationActions.replace({
-      //     key:navigation.state.key,
-      //     routeName: "Details",
-      //     params: {id: res.deck.id}}))
     })
-    // console.log(this.state)
   }
   onEditDeck = () =>{
     const { decks, editDeck, navigation } = this.props
-    editDeck(Object.assign(
-      decks[navigation.state.params.id],
+    const {deck} = navigation.state.params
+
+    editDeck(Object.assign(deck,
       {title:this.state.text})).then(res=>
         navigation.goBack())
+  }
+  onDelete = () => {
+    const { navigation, deleteDeck } = this.props
+    const {deck} = navigation.state.params
+    deleteDeck(deck).then(res=>{
+      navigation.replace("Home")
+    })
+  }
+  promptDelete = () => {
+    Alert.alert("Delete Deck", "Do you want to delete this deck?", [
+      {text: 'Cancel', onPress: () => {}},
+      {text: 'OK', onPress: () => this.onDelete()},
+    ])
   }
 
   render () {
     const {navigation} = this.props
-    const btnConfirm = (navigation.state.params.id === null) ?
-      this.onAddDeck : this.onEditDeck
+    const {deck} = navigation.state.params
+    const btnConfirm = (deck === null) ? this.onAddDeck : this.onEditDeck
 
     return (
       <View>
@@ -130,7 +140,16 @@ class DeckForm extends Component {
             onPress={btnConfirm}
             title='Ok' />
         </View>
-
+        {deck !== null &&
+          <Button
+            containerViewStyle={{flex:1, marginLeft: 0, marginRight: 0}}
+            buttonStyle={{margin: 1}}
+            borderRadius={5}
+            backgroundColor='#4CAF50'
+            disabled={this.state.text === ''}
+            onPress={this.promptDelete}
+            title='Delete' />
+        }
       </View>
     )
   }
@@ -146,6 +165,7 @@ function mapDispatchToProps (dispatch) {
     initDecks: () => dispatch(initDecks()),
     addDeck: (data) => dispatch(addDeck(data)),
     editDeck: (data) => dispatch(editDeck(data)),
+    deleteDeck: (data) => dispatch(deleteDeck(data))
   }
 }
 

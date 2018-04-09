@@ -37,17 +37,7 @@ class DeckDetails extends Component {
   btnGroupsPress = (index) =>{
     this.props.navigation.navigate('DeckForm',{method:'edit'})
   }
-  onDelete = () => {
-    const { navigation, deleteDeck } = this.props
-    navigation.replace("Home")
-    deleteDeck(navigation.state.params.id)
-  }
-  promptDelete = () => {
-    Alert.alert("Delete Deck", "Do you want to delete this deck?", [
-      {text: 'Cancel', onPress: () => {}},
-      {text: 'OK', onPress: () => this.onDelete()},
-    ])
-  }
+
   render () {
     const { navigation, decks } = this.props
     const buttons = ['Edit Deck', 'Add Questions']
@@ -62,25 +52,28 @@ class DeckDetails extends Component {
         <Text h3>{deck.title}</Text>
         <Text h5>{`${deck.questions.length} questions`}</Text>
         <View style={styles.btnGroup}>
-          <TouchableOpacity
+          {/*<TouchableOpacity
             onPress={this.promptDelete}
             style={styles.smBtn}>
             <Text style={styles.smBtnTxt}>Delete Deck</Text>
-          </TouchableOpacity>
+          </TouchableOpacity>*/}
           <TouchableOpacity
             onPress={()=>{
-              navigation.navigate("DeckForm",{id: deck.id})}}
+              navigation.navigate("DeckForm",{deck})}}
             style={styles.smBtn}>
             <Text style={styles.smBtnTxt}>Edit Deck</Text>
           </TouchableOpacity>
-        </View>
-        <View style={styles.btnGroup}>
+
           <TouchableOpacity
             onPress={()=>{
-              navigation.navigate("QuestionForm",{deck: deck})}}
+              navigation.navigate("QuestionForm",{deck, index:null})}}
             style={styles.smBtn}>
             <Text style={styles.smBtnTxt}>Add Question</Text>
           </TouchableOpacity>
+
+        </View>
+        <View style={styles.btnGroup}>
+
           <TouchableOpacity
             style={styles.smBtn}>
             <Text style={styles.smBtnTxt}>Start Quiz</Text>
@@ -90,11 +83,13 @@ class DeckDetails extends Component {
         <FlatList
           style={{backgroundColor: '#cccccc', flex: 1}}
           data={deck.questions}
-          keyExtractor={(item,idx)=>idx}
-          renderItem={({item})=>
+          keyExtractor={(item,index)=>index}
+          renderItem={({item, index})=>
             <ListItem
               title={item.question}
               subtitle={item.answer}
+              onPress={()=>{
+                navigation.navigate("QuestionForm",{deck, index})}}
               rightIcon={{
                 color: '#86939e',
                 fontSize: 12,

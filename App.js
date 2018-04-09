@@ -79,7 +79,7 @@ export default class App extends React.Component {
   constructor(props){
     super(props)
     // API.addDeck("TEST2")
-    // API.clearData()
+    API.clearData()
   }
 
   render() {

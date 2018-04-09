@@ -8,6 +8,7 @@ import Icon from 'react-native-vector-icons/Ionicons';
 
 import { getDecks } from 'actions'
 // import HeaderBar from components/HeaderBar
+// import {DeckListItem} from 'components/S'
 
 const addIcon = (Platform.OS === 'ios')? 'ios-add' : 'md-add'
 
@@ -20,7 +21,7 @@ class DeckLists extends Component {
    headerRight: (<Icon
      style={{fontSize:26, padding: 10, color: '#ffffff'}}
      name={addIcon}
-     onPress={()=>navigation.navigate('DeckForm',{id:null})}
+     onPress={()=>navigation.navigate('DeckForm',{deck:null})}
    />)
   })
 
