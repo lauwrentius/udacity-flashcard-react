@@ -88,7 +88,7 @@ class DeckLists extends Component {
           renderItem={({item})=>
             <ListItem
               title={item.title}
-              subtitle={`${item.questions.length} questions`}
+              subtitle={`${item.questions.length} question${item.questions.length > 1 ? 's' : ''}`}
               onPress={ ()=> this.props.navigation.navigate("Details",{id: item.id}) }
             />
           }

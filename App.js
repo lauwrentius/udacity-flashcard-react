@@ -14,6 +14,8 @@ import DeckLists from 'components/DeckLists'
 import DeckDetails from 'components/DeckDetails'
 import DeckForm from 'components/DeckForm'
 import QuestionForm from 'components/QuestionForm'
+import Quiz from 'components/Quiz'
+
 // import HeaderBar from 'components/HeaderBar'
 import API from 'utils/api'
 
@@ -36,7 +38,6 @@ const MainNavigator = StackNavigator({
   Details: {
     screen: DeckDetails,
     navigationOptions: navOptions
-
   },
   DeckForm: {
     screen: DeckForm,
@@ -44,6 +45,10 @@ const MainNavigator = StackNavigator({
   },
   QuestionForm: {
     screen: QuestionForm,
+    navigationOptions: navOptions
+  },
+  Quiz: {
+    screen: Quiz,
     navigationOptions: navOptions
   }
   // DeckDetail: {

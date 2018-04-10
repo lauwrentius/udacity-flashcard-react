@@ -50,7 +50,7 @@ class DeckDetails extends Component {
       <View style={{flex:1,
           height:500,}}>
         <Text h3>{deck.title}</Text>
-        <Text h5>{`${deck.questions.length} questions`}</Text>
+        <Text h5>{`${deck.questions.length} question${deck.questions.length > 1 ? 's' : ''}`}</Text>
         <View style={styles.btnGroup}>
           {/*<TouchableOpacity
             onPress={this.promptDelete}
