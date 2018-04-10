@@ -4,7 +4,7 @@ import { StyleSheet, Text, View, TouchableOpacity, Platform, Modal } from 'react
 import { createStore, applyMiddleware, compose } from 'redux'
 import { Provider } from 'react-redux'
 import thunkMiddleware from 'redux-thunk'
-import { Constants } from 'expo'
+import { Notifications, Constants } from 'expo'
 import { StackNavigator } from 'react-navigation'
 import Icon from 'react-native-vector-icons/Ionicons';
 
@@ -51,16 +51,9 @@ const MainNavigator = StackNavigator({
     screen: Quiz,
     navigationOptions: navOptions
   }
-  // DeckDetail: {
-  //   screen: EntryDetail,
-  //   navigationOptions: {
-  //     headerTintColor: white,
-  //     headerStyle: {
-  //       backgroundColor: purple,
-  //     }
-  //   }
-  // }
 })
+
+
 
 const logger = store => next => action => {
   console.group(action.type)
@@ -84,7 +77,15 @@ export default class App extends React.Component {
   constructor(props){
     super(props)
     // API.addDeck("TEST2")
-    // API.clearData()
+    API.clearData()
+  }
+  componentDidMount(){
+    API.setLocalNotification().then(res=>{
+      console.log("ASD11",res)
+    })
+    API.getLocalNotification().then(res=>{
+      console.log('LOCAL',res)
+    })
   }
 
   render() {

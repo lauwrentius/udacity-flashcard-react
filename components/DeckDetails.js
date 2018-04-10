@@ -75,6 +75,7 @@ class DeckDetails extends Component {
         <View style={styles.btnGroup}>
 
           <TouchableOpacity
+            onPress={()=>{navigation.navigate("Quiz",{deck})}}
             style={styles.smBtn}>
             <Text style={styles.smBtnTxt}>Start Quiz</Text>
           </TouchableOpacity>

@@ -31,9 +31,6 @@ class DeckLists extends Component {
 
     this.props.navigation.setParams({
       title: 'Udacity Flashcard',
-      // rightNav: (()=>{
-      //   navigation.navigate('DeckEdit',{title: item.title})
-      // })
     })
 
     this.props.getDecks().then(res=>{
@@ -42,11 +39,7 @@ class DeckLists extends Component {
   }
 
   openModal = () => {
-    // console.log("ASDASD", this.props)
-    // this.props.initDecks()
-    // getDecks().then(res=>{
-    //   console.log(res)
-    // })\
+
     this.setState({modalVisible:true})
     console.log(this.props)
   }
