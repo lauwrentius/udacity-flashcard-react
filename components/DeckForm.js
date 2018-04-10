@@ -85,7 +85,11 @@ class DeckForm extends Component {
     const {deck} = navigation.state.params
 
     addDeck(this.state.text).then(res=>{
-      navigation.replace("Details",{id: res.deck.id})
+      navigation.dispatch(NavigationActions.replace({
+        key: navigation.state.key,
+        routeName: "Details",
+        params: {id: res.deck.id}
+      }))
     })
   }
   onEditDeck = () =>{
@@ -100,7 +104,10 @@ class DeckForm extends Component {
     const { navigation, deleteDeck } = this.props
     const {deck} = navigation.state.params
     deleteDeck(deck).then(res=>{
-      navigation.replace("Home")
+      navigation.dispatch(NavigationActions.reset({
+        index: 0,
+        actions: [NavigationActions.navigate({ routeName:"Home"})],
+      }))
     })
   }
   promptDelete = () => {

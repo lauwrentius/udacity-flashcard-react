@@ -4,67 +4,70 @@ import uuidv1 from 'uuid/v1'
 
 
 export default class API{
+
   static initDeck() {
     const initItem = INIT_DECK_DATA
       .map(item=>{
         const id = uuidv1()
         return [id, JSON.stringify({...item, id})]
       })
-    console.log(initItem)
-    AsyncStorage.multiSet(initItem))
+    AsyncStorage.multiSet(initItem).then(res=>{
+      return res
+    })
 
     return initItem
   }
 
   static getDecks() {
     return AsyncStorage.getAllKeys().then(res=>{
-      console.log("R",JSON.parse(res)
-      return null
+      console.log("R",res)
+      if(res.length === 0)
+        return this.parseDecks(API.initDeck())
+      else
+        return AsyncStorage.multiGet(res)
+          .then(res=>this.parseDecks(res))
     })
+  }
 
-    // return AsyncStorage.getItem(DECK_STORAGE_KEY)
-    //   .then(res=>{
-    //     const ret = JSON.parse(res)
-    //     if(ret !== null)
-    //       return ret
-    //     return API.initDeck()
-    //   })
+  static parseDecks(decks){
+    return decks.reduce((prev,curr)=>{
+      prev[curr[0]] = JSON.parse(curr[1])
+      return prev },{})
   }
 
   static addDeck(title){
     const id = uuidv1()
     const deck = {id, title, questions:[]}
-    return AsyncStorage.mergeItem( DECK_STORAGE_KEY,
-      JSON.stringify({[id]:deck}))
-        .then(res=>deck)
+    return AsyncStorage.mergeItem(id,JSON.stringify(deck))
+      .then(res=>deck)
   }
   static editDeck(deck){
-    return AsyncStorage.mergeItem( DECK_STORAGE_KEY,
-      JSON.stringify({[deck.id]:deck}))
+    return AsyncStorage.mergeItem(deck.id,JSON.stringify(deck))
         .then(res=>deck)
   }
-  static addQuestion(deck,question){
-    // console.log("Add Q", deck,question)
-    const arr = deck.questions.concat(question)
-    const obj = Object.assign(deck,{questions: arr})
-    return AsyncStorage.mergeItem( DECK_STORAGE_KEY,
-      JSON.stringify({[obj.id]:obj}))
-        .then(res=>obj)
-  }
   static deleteDeck(deck){
-    return AsyncStorage.getItem(DECK_STORAGE_KEY)
-      .then(res=>{
-        const data = JSON.parse(res)
-        delete data[deck.id]
-        return AsyncStorage.setItem(DECK_STORAGE_KEY, JSON.stringify(data))
-          .then(res=>deck)
-      })
+    return AsyncStorage.removeItem(deck.id)
+      .then(res=>deck)
   }
+  static addQuestion(deck,question){
+    const questions = deck.questions.concat(question)
+    const obj = Object.assign(deck,{questions})
 
-  // static editQuestion(deck,question,index){
-  //   return
-  // }
-
+    return AsyncStorage.mergeItem(obj.id,JSON.stringify(obj))
+      .then(res=>obj)
+  }
+  static editQuestion(deck,question,index){
+    const questions = deck.questions.map((q,i)=>((i===index)?question:q))
+    const obj = Object.assign(deck, {questions})
+    return AsyncStorage.mergeItem(obj.id,JSON.stringify(obj))
+      .then(res=>obj)
+  }
+  static deleteQuestion(deck,index){
+    const questions = deck.questions.filter((q,i)=>(i!==index))
+    const obj = Object.assign(deck, {questions})
+    return AsyncStorage.mergeItem(obj.id,JSON.stringify(obj))
+      .then(res=>obj)
+  }
   static clearData(){
     AsyncStorage.clear()
   }

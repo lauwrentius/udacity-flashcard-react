@@ -79,7 +79,7 @@ class DeckLists extends Component {
           </View>
         </Modal>
 
-        <FlatList
+        {<FlatList
           style={{backgroundColor: '#eeeeee', flex: 1}}
           data={this.props.decks}
           keyExtractor={(item,idx)=>
@@ -92,7 +92,7 @@ class DeckLists extends Component {
               onPress={ ()=> this.props.navigation.navigate("Details",{id: item.id}) }
             />
           }
-        />
+        />}
       </View>
     )
   }

@@ -12,7 +12,7 @@ import Icon from 'react-native-vector-icons/Ionicons'
 
 
 
-import { editDeck, addDeck, initDecks, addQuestion, editQuestion } from 'actions'
+import { editDeck, addDeck, initDecks, addQuestion, editQuestion, deleteQuestion } from 'actions'
 
 
 class QuestionForm extends Component {
@@ -27,6 +27,15 @@ class QuestionForm extends Component {
       this.setState({question:deck.questions[index]['question'],
         answer:deck.questions[index]['answer']})
   }
+  onEditQuestion = () =>{
+    const {navigation} = this.props
+    const {deck, index} = navigation.state.params
+    const {question,answer} = this.state
+
+    this.props.editQuestion(deck, {question,answer},index).then(res=>{
+      navigation.goBack()
+    })
+  }
   onAddQuestion = (addAnother) => {
     const {navigation} = this.props
     const {deck} = navigation.state.params
@@ -39,16 +48,11 @@ class QuestionForm extends Component {
         navigation.goBack()
     })
   }
-  onAddQuestion = (addAnother) => {
+  onDeleteQuestion = () => {
     const {navigation} = this.props
-    const {deck} = navigation.state.params
-    const {question,answer} = this.state
-
-    this.props.Question(deck, {question,answer}).then(res=>{
-      if(addAnother)
-        this.setState({question:"", answer: ""})
-      else
-        navigation.goBack()
+    const {deck, index} = navigation.state.params
+    this.props.deleteQuestion(deck, index).then(res=>{
+      navigation.goBack()
     })
   }
 
@@ -89,7 +93,7 @@ class QuestionForm extends Component {
 
         {index !== null ? (
             <TouchableOpacity
-              onPress={()=>this.onAddQuestion(true)}>
+              onPress={()=>this.onDeleteQuestion()}>
               <Text>Delete question</Text>
             </TouchableOpacity>
           ) : (
@@ -116,6 +120,7 @@ function mapDispatchToProps (dispatch) {
     addQuestion: (deck, question) => dispatch(addQuestion(deck, question)),
     editQuestion: (deck, question, index) =>
       dispatch(editQuestion(deck, question, index)),
+    deleteQuestion: (deck,index) => dispatch(deleteQuestion(deck,index))
   }
 }
 
