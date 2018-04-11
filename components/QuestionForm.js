@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 
 import { StyleSheet,  View, TouchableOpacity, FlatList, StatusBar, TextInput, Platform, alert } from 'react-native'
 
-import { ButtonGroup, Button, Text, ListItem, Header } from 'react-native-elements'
+import { FormLabel, FormInput, ButtonGroup, Button, Text, ListItem, Header } from 'react-native-elements'
 
 import {NavigationActions} from 'react-navigation'
 
@@ -12,8 +12,9 @@ import Icon from 'react-native-vector-icons/Ionicons'
 
 
 
-import { editDeck, addDeck, initDecks, addQuestion, editQuestion, deleteQuestion } from 'actions'
+import { addQuestion, editQuestion, deleteQuestion } from 'actions'
 
+import {ButtonDelete, ButtonAdd,ButtonEdit,ButtonCancel,GroupButton, Forms} from 'components/SharedComponents'
 
 class QuestionForm extends Component {
   state = {
@@ -62,46 +63,51 @@ class QuestionForm extends Component {
     const {index} = navigation.state.params
     const btnConfirm = (index === null) ? this.onAddDeck : this.onEditDeck
 
-    return (<View>
-        <TextInput
-          placeholder="Question"
-          onChangeText={(question) => this.setState({question})}
-          value={question}
+    return (<View style={{paddingTop: 15}}>
+      <Forms
+        label="Question"
+        placeholder="Plese enter a question"
+        onChangeText={(question) => this.setState({question})}
+        value={question}
+      />
+      <Forms
+        label="Answer"
+        placeholder="Plese enter an answer"
+        onChangeText={(answer) => this.setState({answer})}
+        value={answer}
+      />
+      <GroupButton>
+        <ButtonCancel
+          onPress={()=>navigation.goBack()}
+          title="Cancel"
         />
-        <TextInput
-          placeholder="Answer"
-          onChangeText={(answer) => this.setState({answer})}
-          value={answer}
-        />
-        <TouchableOpacity
-          onPress={()=>navigation.goBack()}>
-          <Text>Cancel</Text>
-        </TouchableOpacity>
         {index !== null ? (
-            <TouchableOpacity
-              onPress={()=>this.onEditQuestion(false)}
-              disabled={question === '' && answer === ''}>
-              <Text>Edit Question</Text>
-            </TouchableOpacity>
-          ) : (
-            <TouchableOpacity
-              onPress={()=>this.onAddQuestion(false)}
-              disabled={question === '' && answer === ''}>
-              <Text>Add Question</Text>
-            </TouchableOpacity>
-          )}
-
+          <ButtonEdit
+            onPress={()=>navigation.goBack()}
+            title="Edit question"
+          />
+        ):(
+          <ButtonAdd
+            onPress={()=>navigation.goBack()}
+            disabled={question==='' || answer==='' }
+            title="Add question"
+          />
+        )}
+      </GroupButton>
+      <GroupButton>
         {index !== null ? (
-            <TouchableOpacity
-              onPress={()=>this.onDeleteQuestion()}>
-              <Text>Delete question</Text>
-            </TouchableOpacity>
-          ) : (
-            <TouchableOpacity
-              onPress={()=>this.onAddQuestion(true)}>
-              <Text>Add another question</Text>
-            </TouchableOpacity>
-          )}
+          <ButtonDelete
+            onPress={()=>this.onDeleteQuestion()}
+            title="Delete question"
+          />
+        ):(
+          <ButtonAdd
+            disabled={question==='' || answer==='' }
+            onPress={()=>this.onAddQuestion(true)}
+            title="Add another question"
+          />
+        )}
+      </GroupButton>
       </View>)
   }
 }
@@ -114,9 +120,6 @@ function mapStateToProps ({ cards, decks }) {
 }
 function mapDispatchToProps (dispatch) {
   return {
-    initDecks: () => dispatch(initDecks()),
-    addDeck: (data) => dispatch(addDeck(data)),
-    editDeck: (data) => dispatch(editDeck(data)),
     addQuestion: (deck, question) => dispatch(addQuestion(deck, question)),
     editQuestion: (deck, question, index) =>
       dispatch(editQuestion(deck, question, index)),

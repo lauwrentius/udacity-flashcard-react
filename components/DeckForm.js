@@ -11,6 +11,7 @@ import {NavigationActions} from 'react-navigation'
 import Icon from 'react-native-vector-icons/Ionicons'
 
 
+import {ButtonDelete, ButtonAdd,ButtonEdit,ButtonCancel,GroupButton, Forms} from 'components/SharedComponents'
 
 import { editDeck, addDeck, initDecks, deleteDeck } from 'actions'
 
@@ -122,43 +123,33 @@ class DeckForm extends Component {
     const {deck} = navigation.state.params
     const btnConfirm = (deck === null) ? this.onAddDeck : this.onEditDeck
 
-    return (
-      <View>
-        <TextInput
-          style={styles.textInput}
-          placeholder="Deck Name"
+    return (<View style={{paddingTop: 15}}>
+        <Forms
+          label="Deck"
+          placeholder="Enter a deck name"
           onChangeText={(text) => this.setState({text})}
           value={this.state.text}
         />
-      <View style={{flexDirection:'row', padding: 10}}>
-          <Button
-            containerViewStyle={{flex:1, marginLeft: 0, marginRight: 0}}
-            buttonStyle={{}}
-            borderRadius={5}
-            backgroundColor='#F44336'
+        <GroupButton>
+          <ButtonCancel
             onPress={()=>{navigation.goBack()}}
-            title='Cancel' />
-          <Button
-            containerViewStyle={{flex:1, marginLeft: 0, marginRight: 0}}
-            buttonStyle={{margin: 1}}
-            borderRadius={5}
-            backgroundColor='#4CAF50'
+            title='Cancel'
+          />
+          <ButtonAdd
             disabled={this.state.text === ''}
             onPress={btnConfirm}
-            title='Ok' />
-        </View>
+            title='Ok'
+          />
+        </GroupButton>
         {deck !== null &&
-          <Button
-            containerViewStyle={{flex:1, marginLeft: 0, marginRight: 0}}
-            buttonStyle={{margin: 1}}
-            borderRadius={5}
-            backgroundColor='#4CAF50'
-            disabled={this.state.text === ''}
+          <GroupButton>
+          <ButtonDelete
             onPress={this.promptDelete}
-            title='Delete' />
+            title='Delete Deck'
+          />
+          </GroupButton>
         }
-      </View>
-    )
+      </View>)
   }
 }
 

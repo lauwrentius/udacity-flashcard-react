@@ -1,21 +1,56 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 
-import { StyleSheet,  View, TouchableOpacity, FlatList, StatusBar, Alert} from 'react-native'
-import { ButtonGroup, Button, Text, ListItem, Header } from 'react-native-elements'
+import { StyleSheet,  View, Text, TouchableOpacity, FlatList, StatusBar, Alert} from 'react-native'
+import { ButtonGroup, Button, ListItem, Header } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/Ionicons';
 
+import glamorous, {ThemeProvider} from 'glamorous-native'
+
+
+import {GroupButton,ButtonQuiz,ButtonEdit,ButtonAdd} from 'components/SharedComponents'
 
 import { initDecks, deleteDeck } from 'actions'
 // import HeaderBar from components/HeaderBar
+const style = StyleSheet.create({
+  textStyle: {
+    paddingLeft: 15,
+    paddingRight: 15,
+  },
+  button:{
+    marginLeft: 0,
+    marginRight: 0,
+    flex:1
+  }
 
+})
+const DeckDetailsView = glamorous.view({
+  flex: 1
+})
+const TitleText = glamorous.text(
+  {color: '#333333', fontSize: 26, lineHeight: 32, marginTop:5, marginBottom: 10},
+  style.textStyle
+)
+const BoxText = glamorous.text(
+  {
+    backgroundColor: '#000000',
+    color: '#ffffff',
+    fontSize: 14,
+    fontWeight: "100",
+    lineHeight: 26,
+  },
+  style.textStyle
+)
+const ButtonGroupView = glamorous.view({
+  paddingRight: 10,
+  paddingLeft: 10,
+  paddingTop: 0,
+  paddingBottom: 5,
+  flexDirection: "row",
+})
 const styles = StyleSheet.create({
   btnGroup:{
-    paddingRight: 10,
-    paddingLeft: 10,
-    paddingTop: 0,
-    paddingBottom: 0,
-    flexDirection: "row"
+
   },
   smBtn:{
     backgroundColor: "#333333",
@@ -47,42 +82,32 @@ class DeckDetails extends Component {
       return <View></View>
 
     return (
-      <View style={{flex:1,
-          height:500,}}>
-        <Text h3>{deck.title}</Text>
-        <Text h5>{`${deck.questions.length} question${deck.questions.length > 1 ? 's' : ''}`}</Text>
-        <View style={styles.btnGroup}>
-          {/*<TouchableOpacity
-            onPress={this.promptDelete}
-            style={styles.smBtn}>
-            <Text style={styles.smBtnTxt}>Delete Deck</Text>
-          </TouchableOpacity>*/}
-          <TouchableOpacity
+      <DeckDetailsView>
+        <TitleText>{deck.title}</TitleText>
+        <GroupButton>
+          <ButtonEdit
             onPress={()=>{
               navigation.navigate("DeckForm",{deck})}}
-            style={styles.smBtn}>
-            <Text style={styles.smBtnTxt}>Edit Deck</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity
+            title='Edit Deck'
+          />
+          <ButtonAdd
             onPress={()=>{
               navigation.navigate("QuestionForm",{deck, index:null})}}
-            style={styles.smBtn}>
-            <Text style={styles.smBtnTxt}>Add Question</Text>
-          </TouchableOpacity>
-
-        </View>
-        <View style={styles.btnGroup}>
-
-          <TouchableOpacity
+            title='Add Question'
+          />
+        </GroupButton>
+        <ButtonGroupView>
+          <ButtonQuiz
             onPress={()=>{navigation.navigate("Quiz",{deck})}}
-            style={styles.smBtn}>
-            <Text style={styles.smBtnTxt}>Start Quiz</Text>
-          </TouchableOpacity>
-        </View>
-
+            disabled={(deck.questions.length===0)}
+            title='Start Quiz'
+          />
+        </ButtonGroupView>
+        <BoxText>
+          {`${deck.questions.length} Question${deck.questions.length > 1 ? 's' : ''}`}
+        </BoxText>
         <FlatList
-          style={{backgroundColor: '#cccccc', flex: 1}}
+          style={{backgroundColor: '#e0e0e0', flex: 1}}
           data={deck.questions}
           keyExtractor={(item,index)=>index}
           renderItem={({item, index})=>
@@ -92,13 +117,13 @@ class DeckDetails extends Component {
               onPress={()=>{
                 navigation.navigate("QuestionForm",{deck, index})}}
               rightIcon={{
-                color: '#86939e',
-                fontSize: 12,
-                name: 'edit' }}
+                style: { fontSize: 18 },
+                name: 'pencil',
+                type: 'simple-line-icon' }}
             />
           }
         />
-      </View>
+      </DeckDetailsView>
     )
   }
 }

@@ -115,8 +115,8 @@ export default class API{
               let tommorrow = new Date()
               tommorrow.setMinutes(tommorrow.getMinutes()+1)
               // tommorrow.setDate(tommorrow.getDate()+1)
-              // tommorrow.setHours(15)
-              // tommorrow.setMinutes(44)
+              // tommorrow.setHours(20)
+              // tommorrow.setMinutes(00)
 
               Notifications.scheduleLocalNotificationAsync(
                 this.createNotification(),

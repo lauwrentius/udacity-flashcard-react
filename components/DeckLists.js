@@ -3,14 +3,15 @@ import { connect } from 'react-redux'
 
 import { StyleSheet, Text, View, TouchableOpacity, FlatList, StatusBar, Modal, Platform } from 'react-native';
 import { ListItem, Header } from 'react-native-elements'
-import Icon from 'react-native-vector-icons/Ionicons';
+import Icon from 'react-native-vector-icons/SimpleLineIcons';
 
 
 import { getDecks } from 'actions'
+// import {ADD_ICON} from 'components/SharedComponents'
+
 // import HeaderBar from components/HeaderBar
 // import {DeckListItem} from 'components/S'
 
-const addIcon = (Platform.OS === 'ios')? 'ios-add' : 'md-add'
 
 class DeckLists extends Component {
   state = {
@@ -19,8 +20,9 @@ class DeckLists extends Component {
   static navigationOptions = ({ navigation }) => ({
    title: 'FlashCard App',
    headerRight: (<Icon
-     style={{fontSize:26, padding: 10, color: '#ffffff'}}
-     name={addIcon}
+     style={{fontSize:20, padding: 10, color: '#000000'}}
+     name='plus'
+     type='simple-line-icon'
      onPress={()=>navigation.navigate('DeckForm',{deck:null})}
    />)
   })
@@ -72,7 +74,7 @@ class DeckLists extends Component {
           </View>
         </Modal>
 
-        {<FlatList
+        <FlatList
           style={{backgroundColor: '#eeeeee', flex: 1}}
           data={this.props.decks}
           keyExtractor={(item,idx)=>
@@ -82,10 +84,14 @@ class DeckLists extends Component {
             <ListItem
               title={item.title}
               subtitle={`${item.questions.length} question${item.questions.length > 1 ? 's' : ''}`}
+              rightIcon={{
+                style: { fontSize: 18 },
+                name:'arrow-right',
+                type:'simple-line-icon'}}
               onPress={ ()=> this.props.navigation.navigate("Details",{id: item.id}) }
             />
           }
-        />}
+        />
       </View>
     )
   }

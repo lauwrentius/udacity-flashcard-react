@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { StyleSheet,  View, TouchableOpacity, FlatList, StatusBar, TextInput, Platform, alert, Animated } from 'react-native'
 import { ButtonGroup, Button, Text, ListItem, Header } from 'react-native-elements'
 
+import { GroupButton, ButtonQuiz, ButtonCorrect, ButtonIncorrect } from 'components/SharedComponents'
 class Quiz extends Component {
   state = {
     index:0,
@@ -52,8 +53,7 @@ class Quiz extends Component {
       )
     }
 
-    return(
-      <View>
+    return(<View>
         <Text>Quiz Section</Text>
         <Text>{`${index+1}/${deck.questions.length}`}</Text>
         <Text>{deck.questions[index].question}</Text>
@@ -63,20 +63,20 @@ class Quiz extends Component {
             <Text>{deck.questions[index].answer}</Text>
           </View>
         </Animated.View>
-
-        <TouchableOpacity
-          onPress={this.displayAnswer}>
-          <Text>Show Answer</Text>
-        </TouchableOpacity>
-        <View style={{flexDirection:"row"}}>
-          <TouchableOpacity onPress={()=>this.onAnswer(false)}>
-            <Text>Incorrect</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={()=>this.onAnswer(true)}>
-            <Text>Correct</Text>
-          </TouchableOpacity>
-          <Text>{score}</Text>
-        </View>
+        <GroupButton>
+          <ButtonQuiz
+            onPress={this.displayAnswer}
+            title="Show answer"
+          />
+        </GroupButton>
+        <GroupButton>
+          <ButtonIncorrect
+            onPress={()=>this.onAnswer(false)}
+            title="Incorrect"/>
+          <ButtonCorrect
+            onPress={()=>this.onAnswer(true)}
+            title="Correct"/>
+        </GroupButton>
       </View>
     )
   }

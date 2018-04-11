@@ -15,18 +15,17 @@ import DeckDetails from 'components/DeckDetails'
 import DeckForm from 'components/DeckForm'
 import QuestionForm from 'components/QuestionForm'
 import Quiz from 'components/Quiz'
-
 // import HeaderBar from 'components/HeaderBar'
 import API from 'utils/api'
 
 // const {params} = navigation.state;
 const navOptions = ({ navigation }) => ({
   headerStyle: {
-    backgroundColor: '#0288D1',
+    backgroundColor: '#2196F3',
   },
-  headerTintColor: '#fff',
+  headerTintColor: '#000000',
   headerTitleStyle: {
-    fontWeight: 'bold',
+    fontWeight: "100",
   },
 })
 
@@ -77,7 +76,7 @@ export default class App extends React.Component {
   constructor(props){
     super(props)
     // API.addDeck("TEST2")
-    API.clearData()
+    // API.clearData()
   }
   componentDidMount(){
     API.setLocalNotification().then(res=>{
