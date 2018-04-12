@@ -8,39 +8,12 @@ import { ButtonGroup, Button, Text, ListItem, Header } from 'react-native-elemen
 
 import {NavigationActions} from 'react-navigation'
 
-import Icon from 'react-native-vector-icons/Ionicons'
+import Icon from 'react-native-vector-icons/SimpleLineIcons'
 
 
 import {ButtonDelete, ButtonAdd,ButtonEdit,ButtonCancel,GroupButton, Forms} from 'components/SharedComponents'
 
-import { editDeck, addDeck, initDecks, deleteDeck } from 'actions'
-
-
-// const ok = (Platform.OS === 'ios') ? 'ios-checkmark' : 'md-checkmark'
-// const cancel = (Platform.OS === 'ios') ? 'ios-close' : 'md-close'
-// const icon1 = () => (<Icon
-//   style={{fontSize:26, padding: 10, color: '#ffffff'}}
-//   name={ok}
-// />)
-// const e1 = () => <Button
-//   style={{backgroundColor: '#4CAF50', flex:1}}
-//   title='Ok' />
-// const e2 = () => <Button
-//   icon={{name: 'ac-unit', type: 'Ionicons'}}
-//   style={{backgroundColor: '#F44336'}}
-//   title='Cancel' />
-
-
-//
-// const EditView = glamorous.view({flex: 1, backgroundColor: '#330033'})
-// const TextInput = glamorous.view({
-//     height: 40,
-//     borderColor: 'gray',
-//     borderWidth: 1,
-//     borderRadius: 5,
-//     margin: 10,
-//     padding: 5
-//   })
+import { editDeck, addDeck, deleteDeck } from 'actions'
 
 const styles = StyleSheet.create({
   textInput: {
@@ -54,26 +27,18 @@ const styles = StyleSheet.create({
 })
 
 class DeckForm extends Component {
-  static navigationOptions = ({ navigation }) => ({
-   title: (navigation.state.params.id === null) ? "Add Deck" : "Edit Deck",
-  })
   state = {
     text: ''
   }
-
-
-  constructor(props){
-    super(props)
-    // const title =
-
-    // console.log("M",navigation.state.params.method)
-    // navigation.setParams({ title })
-
-    // setParams
-    // console.log(navigation.state.params)
-
-    //   decks
-  }
+  static navigationOptions = ({ navigation }) => ({
+   title: (navigation.state.params.deck === null) ? "Add Deck" : "Edit Deck",
+   headerLeft: (<Icon
+     style={{fontSize:20, padding: 10, color: '#000000'}}
+     name='arrow-left'
+     type='simple-line-icon'
+     onPress={()=>navigation.goBack()}
+   />)
+  })
   componentDidMount(){
     const {deck} = this.props.navigation.state.params
 
@@ -160,7 +125,6 @@ function mapStateToProps ({ cards, decks }) {
 }
 function mapDispatchToProps (dispatch) {
   return {
-    initDecks: () => dispatch(initDecks()),
     addDeck: (data) => dispatch(addDeck(data)),
     editDeck: (data) => dispatch(editDeck(data)),
     deleteDeck: (data) => dispatch(deleteDeck(data))

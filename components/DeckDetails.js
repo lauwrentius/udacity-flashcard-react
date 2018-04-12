@@ -1,89 +1,36 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 
-import { StyleSheet,  View, Text, TouchableOpacity, FlatList, StatusBar, Alert} from 'react-native'
-import { ButtonGroup, Button, ListItem, Header } from 'react-native-elements'
-import Icon from 'react-native-vector-icons/Ionicons';
-
-import glamorous, {ThemeProvider} from 'glamorous-native'
+import { View, Text, FlatList } from 'react-native'
+import { ListItem } from 'react-native-elements'
+import Icon from 'react-native-vector-icons/SimpleLineIcons';
 
 
-import {GroupButton,ButtonQuiz,ButtonEdit,ButtonAdd} from 'components/SharedComponents'
-
-import { initDecks, deleteDeck } from 'actions'
-// import HeaderBar from components/HeaderBar
-const style = StyleSheet.create({
-  textStyle: {
-    paddingLeft: 15,
-    paddingRight: 15,
-  },
-  button:{
-    marginLeft: 0,
-    marginRight: 0,
-    flex:1
-  }
-
-})
-const DeckDetailsView = glamorous.view({
-  flex: 1
-})
-const TitleText = glamorous.text(
-  {color: '#333333', fontSize: 26, lineHeight: 32, marginTop:5, marginBottom: 10},
-  style.textStyle
-)
-const BoxText = glamorous.text(
-  {
-    backgroundColor: '#000000',
-    color: '#ffffff',
-    fontSize: 14,
-    fontWeight: "100",
-    lineHeight: 26,
-  },
-  style.textStyle
-)
-const ButtonGroupView = glamorous.view({
-  paddingRight: 10,
-  paddingLeft: 10,
-  paddingTop: 0,
-  paddingBottom: 5,
-  flexDirection: "row",
-})
-const styles = StyleSheet.create({
-  btnGroup:{
-
-  },
-  smBtn:{
-    backgroundColor: "#333333",
-    padding: 10,
-    margin: 5,
-    flex: 1,
-  },
-  smBtnTxt:{
-    textAlign: "center",
-    color: "white"
-  }
-
-})
+import {styles,GroupButton,ButtonQuiz,ButtonEdit,ButtonAdd} from 'components/SharedComponents'
 
 class DeckDetails extends Component {
-  constructor(props){
-    super(props)
-  }
-  btnGroupsPress = (index) =>{
-    this.props.navigation.navigate('DeckForm',{method:'edit'})
-  }
+  static navigationOptions = ({ navigation }) => ({
+   title: 'Deck Info',
+   headerLeft: (<Icon
+     style={{fontSize:20, padding: 10, color: '#000000'}}
+     name='arrow-left'
+     type='simple-line-icon'
+     onPress={()=>navigation.goBack()}
+   />)
+  })
 
   render () {
     const { navigation, decks } = this.props
-    const buttons = ['Edit Deck', 'Add Questions']
-    const deck = decks[navigation.state.params.id]
+    const {deck} = navigation.state.params
 
-    if(!deck)
-      return <View></View>
+    // if(!deck)
+    //   return <View></View>
 
     return (
-      <DeckDetailsView>
-        <TitleText>{deck.title}</TitleText>
+      <View style={styles.container}>
+        <Text style={[styles.titleText, styles.padding]}>
+          {deck.title}
+        </Text>
         <GroupButton>
           <ButtonEdit
             onPress={()=>{
@@ -96,16 +43,16 @@ class DeckDetails extends Component {
             title='Add Question'
           />
         </GroupButton>
-        <ButtonGroupView>
+        <GroupButton>
           <ButtonQuiz
             onPress={()=>{navigation.navigate("Quiz",{deck})}}
             disabled={(deck.questions.length===0)}
             title='Start Quiz'
           />
-        </ButtonGroupView>
-        <BoxText>
+        </GroupButton>
+        <Text style={[styles.boxText, styles.padding]}>
           {`${deck.questions.length} Question${deck.questions.length > 1 ? 's' : ''}`}
-        </BoxText>
+        </Text>
         <FlatList
           style={{backgroundColor: '#e0e0e0', flex: 1}}
           data={deck.questions}
@@ -123,7 +70,7 @@ class DeckDetails extends Component {
             />
           }
         />
-      </DeckDetailsView>
+      </View>
     )
   }
 }
@@ -133,14 +80,8 @@ function mapStateToProps ({ cards, decks }) {
     decks: decks
   }
 }
-function mapDispatchToProps (dispatch) {
-  return {
-    initDecks: () => dispatch(initDecks()),
-    deleteDeck: (data) => dispatch(deleteDeck(data))
-  }
-}
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  null
 )(DeckDetails)
