@@ -8,6 +8,7 @@ export function getDecks(){
     })
   }
 }
+
 export function addDeck(title){
   return (dispatch) => {
     return API.addDeck(title).then(res=>{
@@ -15,6 +16,7 @@ export function addDeck(title){
     })
   }
 }
+
 export function deleteDeck(deck){
   return (dispatch) => {
     return API.deleteDeck(deck).then(res=>{
@@ -22,6 +24,7 @@ export function deleteDeck(deck){
     })
   }
 }
+
 export function editDeck(deck){
   return (dispatch) => {
     return API.editDeck(deck).then(res=>{
@@ -33,6 +36,7 @@ export function editDeck(deck){
 export function addQuestion(deck, question){
   return (dispatch) => {
     return API.addQuestion(deck, question).then(res=>{
+      console.log("DECK",res)
       return dispatch(asyncCallback(EDIT_DECK, res))
     })
   }

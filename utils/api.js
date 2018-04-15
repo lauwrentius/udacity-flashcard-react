@@ -1,11 +1,12 @@
 import { AsyncStorage } from 'react-native'
 import uuidv1 from 'uuid/v1'
-// import { formatCalendarResults, CALENDAR_STORAGE_KEY } from './_calendar'
 import { Permissions, Notifications } from 'expo'
 
-
+/**
+* @description Api class. This class contains static function that the user
+* needs to interact with the devce local storage (AsuncStorage).
+*/
 export default class API{
-
   static initDeck() {
     const initItem = INIT_DECK_DATA
       .map(item=>{
@@ -19,7 +20,6 @@ export default class API{
 
     return initItem
   }
-
   static getDecks() {
     return AsyncStorage.getAllKeys().then(res=>{
       if(res.length === 0)
@@ -29,9 +29,7 @@ export default class API{
           .then(res=>this.parseDecks(res))
     })
   }
-
   static parseDecks(arr){
-    console.log("DECKS",arr)
     const decks = arr.filter(i=>i[0]!==STUDY_NOTIFICATION_KEY)
     return decks.reduce((prev,curr)=>{
       prev[curr[0]] = JSON.parse(curr[1])
@@ -77,7 +75,6 @@ export default class API{
 
   static clearLocalNotification(){
     return AsyncStorage.removeItem(STUDY_NOTIFICATION_KEY)
-
   }
   static createNotification(){
     return{
@@ -100,24 +97,18 @@ export default class API{
       .then(JSON.parse)
   }
   static setLocalNotification(){
-    return AsyncStorage.getItem(STUDY_NOTIFICATION_KEY)
+     AsyncStorage.getItem(STUDY_NOTIFICATION_KEY)
       .then(JSON.parse)
       .then(res=>{
-        console.log("RES",res)
         if(res === null){
-          console.log("RES11",res)
-
           Permissions.askAsync(Permissions.NOTIFICATIONS)
           .then(({status})=>{
-            console.log('status',status)
-            // if(status === 'granted'){
+            if(status === 'granted'){
               Notifications.cancelAllScheduledNotificationsAsync()
               let tommorrow = new Date()
-              tommorrow.setMinutes(tommorrow.getMinutes()+1)
-              // tommorrow.setDate(tommorrow.getDate()+1)
-              // tommorrow.setHours(20)
-              // tommorrow.setMinutes(00)
-
+              tommorrow.setDate(tommorrow.getDate()+1)
+              tommorrow.setHours(20)
+              tommorrow.setMinutes(0)
               Notifications.scheduleLocalNotificationAsync(
                 this.createNotification(),
                 {
@@ -125,17 +116,13 @@ export default class API{
                   repeat: "day"
                 }
               )
-              console.log('ASD1')
-              AsyncStorage.setItem(STUDY_NOTIFICATION_KEY, JSON.stringify(true)).then(res=>
-                AsyncStorage.getItem(STUDY_NOTIFICATION_KEY).then(res=>console.log("GET",res))
-              )
-            // }
+              AsyncStorage.setItem(STUDY_NOTIFICATION_KEY, JSON.stringify(true))
+            }
           })
         }
      })
   }
 }
-
 
 const STUDY_NOTIFICATION_KEY = 'Flashcard-StudyNotification'
 const INIT_DECK_DATA = [

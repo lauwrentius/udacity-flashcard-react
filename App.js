@@ -1,13 +1,9 @@
 import React from 'react'
-import { StyleSheet, Text, View, TouchableOpacity, Platform, Modal } from 'react-native'
-
+import { View } from 'react-native'
 import { createStore, applyMiddleware, compose } from 'redux'
 import { Provider } from 'react-redux'
 import thunkMiddleware from 'redux-thunk'
-import { Notifications, Constants } from 'expo'
 import { StackNavigator } from 'react-navigation'
-import Icon from 'react-native-vector-icons/Ionicons';
-
 
 import reducer from 'reducers'
 import DeckLists from 'components/DeckLists'
@@ -15,17 +11,15 @@ import DeckDetails from 'components/DeckDetails'
 import DeckForm from 'components/DeckForm'
 import QuestionForm from 'components/QuestionForm'
 import Quiz from 'components/Quiz'
-// import HeaderBar from 'components/HeaderBar'
 import API from 'utils/api'
 
-// const {params} = navigation.state;
 const navOptions = ({ navigation }) => ({
   headerStyle: {
     backgroundColor: '#2196F3',
   },
   headerTintColor: '#000000',
   headerTitleStyle: {
-    fontWeight: "100",
+    fontWeight: "400",
   },
 })
 
@@ -52,8 +46,6 @@ const MainNavigator = StackNavigator({
   }
 })
 
-
-
 const logger = store => next => action => {
   console.group(action.type)
   console.info('dispatching', action)
@@ -72,19 +64,19 @@ const store = createStore(
   )
 )
 
+/**
+* @description App Class. This class handles app navigation as well as creating the redux store.
+*/
 export default class App extends React.Component {
   constructor(props){
     super(props)
-    // API.addDeck("TEST2")
     // API.clearData()
   }
+  /**
+  * @description Sets a local notification and asks the user for permissions if it's not been set before.
+  */
   componentDidMount(){
-    API.setLocalNotification().then(res=>{
-      console.log("ASD11",res)
-    })
-    API.getLocalNotification().then(res=>{
-      console.log('LOCAL',res)
-    })
+    API.setLocalNotification()
   }
 
   render() {
@@ -99,15 +91,3 @@ export default class App extends React.Component {
     )
   }
 }
-// <Provider store={createStore(reducer)}>
-// </Provider>
-//
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: '#fff',
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//   },
-// });
-//

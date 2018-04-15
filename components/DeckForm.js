@@ -1,31 +1,15 @@
 import React, { Component } from 'react'
-
 import { connect } from 'react-redux'
-
-import { StyleSheet,  View, TouchableOpacity, FlatList, StatusBar, TextInput, Platform,Alert } from 'react-native'
-
-import { ButtonGroup, Button, Text, ListItem, Header } from 'react-native-elements'
-
-import {NavigationActions} from 'react-navigation'
-
+import { View, Alert } from 'react-native'
+import { NavigationActions } from 'react-navigation'
 import Icon from 'react-native-vector-icons/SimpleLineIcons'
 
-
-import {ButtonDelete, ButtonAdd,ButtonEdit,ButtonCancel,GroupButton, Forms} from 'components/SharedComponents'
-
+import { ButtonDelete, ButtonAdd, ButtonEdit, ButtonCancel, GroupButton, Forms } from 'components/sharedComponents'
 import { editDeck, addDeck, deleteDeck } from 'actions'
 
-const styles = StyleSheet.create({
-  textInput: {
-    height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    borderRadius: 5,
-    margin: 10,
-    padding: 5
-  }
-})
-
+/**
+* @description DeckForm Class. This class handles editing (and deleting) of exsisting decks as well as creating a new deck.
+*/
 class DeckForm extends Component {
   state = {
     text: ''
@@ -45,7 +29,6 @@ class DeckForm extends Component {
     if(deck !== null)
       this.setState({text:deck.title})
   }
-
   onAddDeck = () =>{
     const { addDeck, navigation } = this.props
     const {deck} = navigation.state.params
@@ -59,7 +42,7 @@ class DeckForm extends Component {
     })
   }
   onEditDeck = () =>{
-    const { decks, editDeck, navigation } = this.props
+    const { editDeck, navigation } = this.props
     const {deck} = navigation.state.params
 
     editDeck(Object.assign(deck,
@@ -82,7 +65,6 @@ class DeckForm extends Component {
       {text: 'OK', onPress: () => this.onDelete()},
     ])
   }
-
   render () {
     const {navigation} = this.props
     const {deck} = navigation.state.params
@@ -118,20 +100,15 @@ class DeckForm extends Component {
   }
 }
 
-function mapStateToProps ({ cards, decks }) {
-  return {
-    decks: decks
-  }
-}
 function mapDispatchToProps (dispatch) {
   return {
-    addDeck: (data) => dispatch(addDeck(data)),
-    editDeck: (data) => dispatch(editDeck(data)),
-    deleteDeck: (data) => dispatch(deleteDeck(data))
+    addDeck: (title) => dispatch(addDeck(title)),
+    editDeck: (deck) => dispatch(editDeck(deck)),
+    deleteDeck: (deck) => dispatch(deleteDeck(deck))
   }
 }
 
 export default connect(
-  mapStateToProps,
+  null,
   mapDispatchToProps
 )(DeckForm)

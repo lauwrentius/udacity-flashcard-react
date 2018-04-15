@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
-
 import { View, FlatList } from 'react-native';
 import { ListItem } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
 
 import { getDecks } from 'actions'
-import { styles } from 'components/SharedComponents'
+import { styles } from 'components/sharedComponents'
 
+/**
+* @description DeckForm Lists Class. This class is the starting home for the apps. It lists all of the avaiable decks.
+*/
 class DeckLists extends Component {
   static navigationOptions = ({ navigation }) => ({
    title: 'FlashCard App',
@@ -30,9 +32,7 @@ class DeckLists extends Component {
         <FlatList
           style={{backgroundColor: '#eeeeee', flex: 1}}
           data={this.props.decks}
-          keyExtractor={(item,idx)=>
-            item.title
-          }
+          keyExtractor={item=>item.id}
           renderItem={({item})=>
             <ListItem
               title={item.title}
@@ -41,7 +41,7 @@ class DeckLists extends Component {
                 style: { fontSize: 18 },
                 name:'arrow-right',
                 type:'simple-line-icon'}}
-              onPress={ ()=> this.props.navigation.navigate("Details",{deck: item}) }
+              onPress={ ()=> this.props.navigation.navigate("Details",{id: item.id}) }
             />
           }
         />

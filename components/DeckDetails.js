@@ -5,27 +5,29 @@ import { View, Text, FlatList } from 'react-native'
 import { ListItem } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/SimpleLineIcons';
 
+import {styles,GroupButton,ButtonQuiz,ButtonEdit,ButtonAdd} from 'components/sharedComponents'
 
-import {styles,GroupButton,ButtonQuiz,ButtonEdit,ButtonAdd} from 'components/SharedComponents'
-
+/**
+* @description DeckDetails Class. This class shows the decks details (Deck name and lists of cards (questions/answers) on the decks).
+*/
 class DeckDetails extends Component {
   static navigationOptions = ({ navigation }) => ({
-   title: 'Deck Info',
-   headerLeft: (<Icon
-     style={{fontSize:20, padding: 10, color: '#000000'}}
-     name='arrow-left'
-     type='simple-line-icon'
-     onPress={()=>navigation.goBack()}
+    title: 'Deck Info',
+    headerLeft: (<Icon
+      style={{fontSize:20, padding: 10, color: '#000000'}}
+      name='arrow-left'
+      type='simple-line-icon'
+      onPress={()=>navigation.goBack()}
    />)
   })
 
   render () {
     const { navigation, decks } = this.props
-    const {deck} = navigation.state.params
+    const { id } = navigation.state.params
+    const deck = decks[id]
 
-    // if(!deck)
-    //   return <View></View>
-
+    if(!deck)
+      return <View></View>
     return (
       <View style={styles.container}>
         <Text style={[styles.titleText, styles.padding]}>
@@ -75,7 +77,7 @@ class DeckDetails extends Component {
   }
 }
 
-function mapStateToProps ({ cards, decks }) {
+function mapStateToProps ({ decks }) {
   return {
     decks: decks
   }

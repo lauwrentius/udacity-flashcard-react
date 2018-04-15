@@ -1,48 +1,53 @@
 import React, { Component } from 'react'
-
 import { connect } from 'react-redux'
-
-import { StyleSheet,  View, TouchableOpacity, FlatList, StatusBar, TextInput, Platform, alert } from 'react-native'
-
-import { FormLabel, FormInput, ButtonGroup, Button, Text, ListItem, Header } from 'react-native-elements'
-
-import {NavigationActions} from 'react-navigation'
-
-import Icon from 'react-native-vector-icons/Ionicons'
-
-
+import { View, Alert } from 'react-native'
+import Icon from 'react-native-vector-icons/SimpleLineIcons'
 
 import { addQuestion, editQuestion, deleteQuestion } from 'actions'
+import { ButtonDelete, ButtonAdd, ButtonEdit, ButtonCancel, GroupButton, Forms } from 'components/sharedComponents'
 
-import {ButtonDelete, ButtonAdd,ButtonEdit,ButtonCancel,GroupButton, Forms} from 'components/SharedComponents'
-
+/**
+* @description QuestionForm Class. This class handles editing (and deleting) of exsisting question for a specific deck.
+* It also handles adding a new questions.
+*/
 class QuestionForm extends Component {
+  static navigationOptions = ({ navigation }) => ({
+    title: (navigation.state.params.index === null) ? "Add Question" : "Edit Question",
+    headerLeft: (<Icon
+      style={{fontSize:20, padding: 10, color: '#000000'}}
+      name='arrow-left'
+      type='simple-line-icon'
+      onPress={()=>navigation.goBack()}
+    />)
+  })
+
   state = {
     question: "",
     answer: ""
   }
   componentDidMount(){
-    const {deck, index} = this.props.navigation.state.params
+    const { deck, index } = this.props.navigation.state.params
     console.log(this.props)
     if(index !== null)
       this.setState({question:deck.questions[index]['question'],
         answer:deck.questions[index]['answer']})
   }
   onEditQuestion = () =>{
-    const {navigation} = this.props
-    const {deck, index} = navigation.state.params
-    const {question,answer} = this.state
+    const { navigation } = this.props
+    const { deck, index } = navigation.state.params
+    const { question,answer } = this.state
 
     this.props.editQuestion(deck, {question,answer},index).then(res=>{
       navigation.goBack()
     })
   }
   onAddQuestion = (addAnother) => {
-    const {navigation} = this.props
-    const {deck} = navigation.state.params
-    const {question,answer} = this.state
+    const { navigation } = this.props
+    const { deck } = navigation.state.params
+    const { question,answer } = this.state
 
     this.props.addQuestion(deck, {question,answer}).then(res=>{
+      console.log("THEN",res)
       if(addAnother)
         this.setState({question:"", answer: ""})
       else
@@ -50,17 +55,22 @@ class QuestionForm extends Component {
     })
   }
   onDeleteQuestion = () => {
-    const {navigation} = this.props
-    const {deck, index} = navigation.state.params
+    const { navigation } = this.props
+    const { deck, index } = navigation.state.params
     this.props.deleteQuestion(deck, index).then(res=>{
       navigation.goBack()
     })
   }
-
+  promptDelete = () => {
+    Alert.alert("Delete Question", "Do you want to delete this question?", [
+      {text: 'Cancel', onPress: () => {}},
+      {text: 'OK', onPress: () => this.onDeleteQuestion()},
+    ])
+  }
   render(){
-    const {navigation} = this.props
-    const {question, answer} = this.state
-    const {index} = navigation.state.params
+    const { navigation } = this.props
+    const { question, answer } = this.state
+    const { index } = navigation.state.params
     const btnConfirm = (index === null) ? this.onAddDeck : this.onEditDeck
 
     return (<View style={{paddingTop: 15}}>
@@ -83,12 +93,12 @@ class QuestionForm extends Component {
         />
         {index !== null ? (
           <ButtonEdit
-            onPress={()=>navigation.goBack()}
+            onPress={()=>this.onEditQuestion()}
             title="Edit question"
           />
         ):(
           <ButtonAdd
-            onPress={()=>navigation.goBack()}
+            onPress={()=>this.onAddQuestion(false)}
             disabled={question==='' || answer==='' }
             title="Add question"
           />
@@ -97,7 +107,7 @@ class QuestionForm extends Component {
       <GroupButton>
         {index !== null ? (
           <ButtonDelete
-            onPress={()=>this.onDeleteQuestion()}
+            onPress={this.promptDelete}
             title="Delete question"
           />
         ):(
@@ -112,12 +122,6 @@ class QuestionForm extends Component {
   }
 }
 
-
-function mapStateToProps ({ cards, decks }) {
-  return {
-    decks: decks
-  }
-}
 function mapDispatchToProps (dispatch) {
   return {
     addQuestion: (deck, question) => dispatch(addQuestion(deck, question)),
@@ -128,6 +132,6 @@ function mapDispatchToProps (dispatch) {
 }
 
 export default connect(
-  mapStateToProps,
+  null,
   mapDispatchToProps
 )(QuestionForm)
